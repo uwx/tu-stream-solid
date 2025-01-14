@@ -1,0 +1,37 @@
+{
+  "name": "vite-template-solid",
+  "version": "0.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/cross-spawn": "^6.0.6",
+    "@types/node": "^22.10.6",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.0",
+    "vite-plugin-solid": "^2.11.0",
+    "vite-plugin-typed-css-modules": "^0.3.0",
+    "vite-tsconfig-paths": "^5.1.4"
+  },
+  "dependencies": {
+    "@ctrl/plex": "^3.4.0",
+    "@hono/node-server": "^1.13.7",
+    "@hono/trpc-server": "^0.3.4",
+    "@solidjs/router": "^0.15.2",
+    "@trpc/client": "^10.45.2",
+    "@trpc/server": "^10.45.2",
+    "cross-spawn": "^7.0.6",
+    "dashjs": "^4.7.4",
+    "dotenv": "^16.4.7",
+    "hono": "^4.6.16",
+    "solid-js": "^1.9.3",
+    "zod": "^3.24.1"
+  },
+  "packageManager": "pnpm@9.15.0+sha512.76e2379760a4328ec4415815bcd6628dee727af3779aaa4c914e3944156c4299921a89f976381ee107d41f12cfa4b66681ca9c718f0668fa0831ed4c6d8ba56c"
+}
