@@ -4,8 +4,9 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "start": "vite",
-    "dev": "vite",
+    "start-client": "vite",
+    "start-server": "tsx src/lib/server.ts",
+    "caddy": "caddy run --watch",
     "build": "vite build",
     "serve": "vite preview"
   },
