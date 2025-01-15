@@ -1,16 +1,17 @@
 import { type Accessor, createSignal, createEffect } from "solid-js";
 
+// https://medium.com/@davidcallanan/async-solid-js-the-desire-for-createeventual-93e2ae846ccb
 export function createEventual<T>(async_func: () => Promise<T>): Accessor<T | undefined> {
     const [derivative, setDerivative] = createSignal<T>();
 
-    let outstanding_promise: Promise<T>;
+    let outstandingPromise: Promise<T>;
 
     createEffect(() => {
         const promise = (async () => await async_func())();
-        outstanding_promise = promise;
+        outstandingPromise = promise;
 
         promise.then((result) => {
-            if (promise !== outstanding_promise) {
+            if (promise !== outstandingPromise) {
                 return;
             }
 
@@ -18,7 +19,7 @@ export function createEventual<T>(async_func: () => Promise<T>): Accessor<T | un
         });
 
         promise.catch((error) => {
-            if (promise !== outstanding_promise) {
+            if (promise !== outstandingPromise) {
                 return;
             }
 
