@@ -1,12 +1,9 @@
 import 'dotenv/config';
 
-import { serve, type ServerType } from '@hono/node-server'
-import { getStreamlinkStream } from './stream-streamlink';
 import { Hono } from 'hono';
 import { serveStatic } from '@hono/node-server/serve-static'
 import { cors } from 'hono/cors';
 import { Movie, MovieSection, MyPlexAccount, Show } from '@ctrl/plex';
-import { getRtmpStream } from './stream-rtmp';
 import { trpcServer } from '@hono/trpc-server';
 import { appRouter } from './router';
 
@@ -76,9 +73,4 @@ app.use('/streams/*', serveStatic({
     }
 }));
 
-const server = serve({
-    fetch: app.fetch,
-    port: 17772
-}, info => {
-    console.log(info);
-});
+export default app;

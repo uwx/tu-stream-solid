@@ -103,6 +103,8 @@ export async function startStreamlinkStream(streamKey: string, watchUrl: URL, sa
 }
 
 export async function getStreamlinkStream(watchUrl: string): Promise<{ mpdPath: string; } | { error: string; }> {
+    console.log('getStreamlinkStream', watchUrl);
+
     if (!watchUrl) {
         throw new Error('Missing watch URL');
     }
