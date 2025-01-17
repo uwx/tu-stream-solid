@@ -23,5 +23,6 @@ render(() => (
         <Route path="/" component={lazy(() => import('./pages/Home'))} />
         <Route path="/watch-rtmp/:username" component={lazy(() => import('./pages/WatchRtmp'))} />
         <Route path="/watch-streamlink/:host/:path" component={lazy(() => import('./pages/WatchStreamlink'))} />
+        <Route path="/listen/:url" component={lazy(() => import('./pages/Listen'))} />
     </Router>
 ), root!);

@@ -13,6 +13,7 @@
   "license": "MIT",
   "devDependencies": {
     "@hono/vite-dev-server": "^0.18.1",
+    "@rsbuild/core": "^1.1.13",
     "@types/cross-spawn": "^6.0.6",
     "@types/node": "^22.10.6",
     "typescript": "^5.7.2",
@@ -28,6 +29,8 @@
     "@solidjs/router": "^0.15.2",
     "@trpc/client": "^10.45.2",
     "@trpc/server": "^10.45.2",
+    "butterchurn": "^2.6.7",
+    "butterchurn-presets": "^2.4.7",
     "cross-spawn": "^7.0.6",
     "dashjs": "^4.7.4",
     "dotenv": "^16.4.7",

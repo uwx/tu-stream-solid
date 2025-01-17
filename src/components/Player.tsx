@@ -1,5 +1,5 @@
 import { createEventual } from "@/lib/reactive-utils";
-import { videoInfo, videoPlayer } from "@/styles/videoPlayer.module.css";
+import { videoInfo, videoPlayer } from "./Player.module.css";
 import dashjs, { type MediaPlayerClass } from "dashjs";
 import { createEffect, createSignal, Match, onCleanup, Show, Switch, type JSXElement } from "solid-js";
 import { Dash } from "./Dash";

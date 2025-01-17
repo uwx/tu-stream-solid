@@ -11,7 +11,7 @@ export default defineConfig({
     typedCssModulesPlugin(),
     devServer({
       entry: "./src/lib/server.ts",
-      exclude: [/^(?!\/api|\/streams)/],
+      exclude: [/^(?!\/api|\/streams|\/cors)/],
       injectClientScript: false,
     }),
   ],
@@ -19,6 +19,6 @@ export default defineConfig({
     port: 17773,
   },
   build: {
-    target: 'esnext',
+    target: 'chrome59',
   },
 });
