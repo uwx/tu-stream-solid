@@ -1,0 +1,74 @@
+# Simple workflow for deploying static content to GitHub Pages
+name: Build Single-file Executable
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  # Single deploy job since we're just deploying
+  deploy:
+    runs-on: windows-latest
+    env:
+      STORE_PATH: ''
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - uses: pnpm/action-setup@v3
+        name: Install pnpm
+        with:
+          version: 9.15.0
+          run_install: false
+
+      - uses: actions/setup-node@v4
+        name: Setup node
+        with:
+          node-version: latest
+          cache: 'pnpm'
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: |
+          pnpm install
+
+      - uses: TheMrMilchmann/setup-msvc-dev@v3
+        with:
+          arch: x64
+
+      - name: Build Client & Server
+        run: |
+          pnpx rsbuild build --mode development
+
+      - name: Build Single Executable Application
+        run: |
+          node --experimental-sea-config sea-config.json
+
+          node -e "require('fs').copyFileSync(process.execPath, 'tu-stream-solid.exe')"
+
+          signtool remove /s tu-stream-solid.exe
+
+          pnpx postject tu-stream-solid.exe NODE_SEA_BLOB dist/sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: my-artifact
+          path: |
+            tu-stream-solid.exe
+            dist/**
+          compression-level: 9 # maximum compression
+      

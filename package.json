@@ -4,11 +4,11 @@
   "description": "",
   "type": "module",
   "scripts": {
-    "start-client": "vite",
+    "start-client": "rsbuild dev",
     "start-server": "tsx src/lib/server.ts",
     "caddy": "caddy run --watch",
-    "build": "vite build",
-    "serve": "vite preview"
+    "build": "rsbuild build",
+    "serve": "rsbuild preview"
   },
   "license": "MIT",
   "devDependencies": {
