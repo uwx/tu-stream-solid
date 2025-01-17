@@ -21,7 +21,7 @@ export const ffmepg = String.raw`E:\Tools\Path\ffmpeg.exe`;
 
 const transcodes: Record<string, string>[] = [
     {
-        'b:v': '0',
+        'b:v': '1024k',
     }
 ];
 
@@ -79,12 +79,11 @@ export async function startFfmpeg({ inputs, mpdPath, seek }: {
     }
 
     args.push(
-        '-codec:v', 'libvpx-vp9',
+        '-codec:v', 'libvpx',
         '-deadline', 'realtime',
         //'-quality', 'realtime',
         '-row-mt', '1',
         '-cpu-used', '5',
-        '-crf', '34',
         '-codec:a', 'libvorbis'
     );
 
