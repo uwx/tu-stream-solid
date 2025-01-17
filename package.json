@@ -14,6 +14,8 @@
   "devDependencies": {
     "@hono/vite-dev-server": "^0.18.1",
     "@rsbuild/core": "^1.1.13",
+    "@rsbuild/plugin-babel": "^1.0.3",
+    "@rsbuild/plugin-solid": "^1.0.4",
     "@types/cross-spawn": "^6.0.6",
     "@types/node": "^22.10.6",
     "typescript": "^5.7.2",
