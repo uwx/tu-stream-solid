@@ -50,7 +50,7 @@ jobs:
 
       - name: Build Client & Server
         run: |
-          pnpx rsbuild build --mode development
+          pnpx @rsbuild/core build --mode development
 
       - name: Build Single Executable Application
         run: |
