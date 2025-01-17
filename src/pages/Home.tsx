@@ -75,22 +75,5 @@ export default function HomeComponent() {
                 </div>
             </Match>
         </Switch>
-        
-        <h2>Listen to Internet Radio</h2>
-
-        <label>
-            MP3/M4A/OGG URL (<b>not</b> the m3u URL!):
-            <input type="text" value={icecastUrl()} onInput={event => setIcecastUrl(event.currentTarget.value)} />
-        </label>
-        <button type="submit" onClick={() => {
-            let localIcecastUrl = icecastUrl();
-            if (!localIcecastUrl.startsWith('http')) {
-                localIcecastUrl = `https://${localIcecastUrl}`;
-            }
-
-            const url = new URL(localIcecastUrl);
-
-            navigate(`/listen/${encodeURIComponent(url.toString())}`);
-        }}>Open</button>
     </div>;
 }
