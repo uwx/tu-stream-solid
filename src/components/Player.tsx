@@ -37,7 +37,10 @@ export default function Player<T>(props: {
         }
     }, 5_000);
 
+    let alive = true;
+
     onCleanup(() => {
+        alive = false;
         clearInterval(interval);
         clearInterval(interval2);
         clearInterval(interval3);
@@ -86,6 +89,19 @@ export default function Player<T>(props: {
                 initialized={(mediaPlayer, element) => {
                     player = mediaPlayer;
                     videoEl = element;
+
+                    console.log('initialized', player, videoEl);
+
+                    player.play();
+
+                    setTimeout(() => {
+                        if (!alive) return;
+                        if (!player) return;
+
+                        if (!player.isPaused() && !player.isSeeking() && player.isReady() && player.time() < 0.01) {
+                            document.location.reload(); 
+                        }
+                    }, 5_000)
 
                     player.on('streamInitialized', () => {
                         setStreamEnded(false);
