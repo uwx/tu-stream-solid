@@ -1,5 +1,5 @@
-import { apiClient } from '@/lib/client';
-import type { getRtmpStream } from '@/lib/stream-rtmp';
+import { apiClient } from '@/lib/server/client';
+import type { getRtmpStream } from '@/lib/server/streamers/rtmp';
 import { A, useNavigate } from '@solidjs/router';
 import { createComputed, createMemo, createSignal, Match, Switch } from 'solid-js';
 

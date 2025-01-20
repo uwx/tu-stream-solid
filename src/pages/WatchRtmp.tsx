@@ -1,6 +1,6 @@
 import { useParams } from '@solidjs/router';
 import Player from '@/components/Player';
-import { apiClient } from '@/lib/client';
+import { apiClient } from '@/lib/server/client';
 
 export default function RouteComponent() {
     const params = useParams<{ username: string }>();
