@@ -17,7 +17,7 @@ import { basename, dirname } from "node:path";
 //     -f webm ^
 //     "stream.webm"
 
-export const ffmepg = String.raw`E:\Tools\Path\ffmpeg.exe`;
+export const ffmepg = process.env.FFMPEG_PATH ?? 'ffmpeg';
 
 const transcodes: Record<string, string>[] = [
     {

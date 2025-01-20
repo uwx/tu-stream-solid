@@ -1,16 +1,18 @@
-import { startFfmpeg } from './ffmpeg';
+import { startFfmpeg } from '@/lib/server/ffmpeg';
 import { startStreamlink } from './streamlink';
 import type { ChildProcess } from 'node:child_process';
 import { createWriteStream, existsSync, type WriteStream } from 'node:fs';
 import { mkdir, rm } from 'node:fs/promises';
 import { basename, join } from 'node:path';
-import { addStream, getStream, WatchStream } from './streams';
+import { addStream, getStream, WatchStream } from '@/lib/server/streams';
 import { pipeline } from 'node:stream/promises';
-import { appendLogKey } from './utils';
+import { appendLogKey, waitUntilExists } from '@/lib/server/utils';
 
 export class StreamlinkStream extends WatchStream {
     typeKey = 'streamlink';
     private logFile: WriteStream;
+    lastHeartbeat: number;
+    private autoCleanupInterval: NodeJS.Timeout;
 
     constructor(
         streamKey: string,
@@ -30,11 +32,21 @@ export class StreamlinkStream extends WatchStream {
             console.log(`[${logKey}] process exited`);
             this.dispose();
         });
+
+        this.lastHeartbeat = Date.now();
+
+        this.autoCleanupInterval = setInterval(() => {
+            if (Date.now() - this.lastHeartbeat > 360_000) {
+                console.log(`[${logKey}] streamlink heartbeat timeout`);
+                this.dispose();
+            }
+        }, 60_000);
     }
 
     async dispose(): Promise<void> {
         await super.dispose();
         this.logFile.close();
+        clearInterval(this.autoCleanupInterval);
     }
 }
 
@@ -102,6 +114,15 @@ export async function startStreamlinkStream(streamKey: string, watchUrl: URL, sa
     );
 }
 
+function streamKeyFromUrl(watchUrl: string) {
+    const watchUrlUrl = new URL(watchUrl);
+
+    const sanitizedPathname = watchUrlUrl.pathname.replace(/[^A-Za-z0-9_\.\-]+/g, '_');
+    const streamKey = `${watchUrlUrl.hostname}/${sanitizedPathname}`;
+
+    return { watchUrlUrl, sanitizedPathname, streamKey };
+}
+
 export async function getStreamlinkStream(watchUrl: string): Promise<{ mpdPath: string; } | { error: string; }> {
     console.log('getStreamlinkStream', watchUrl);
 
@@ -109,10 +130,7 @@ export async function getStreamlinkStream(watchUrl: string): Promise<{ mpdPath: 
         throw new Error('Missing watch URL');
     }
 
-    const watchUrlUrl = new URL(watchUrl);
-
-    const sanitizedPathname = watchUrlUrl.pathname.replace(/[^A-Za-z0-9_\.\-]+/g, '_');
-    const streamKey = `${watchUrlUrl.hostname}/${sanitizedPathname}`;
+    const { watchUrlUrl, sanitizedPathname, streamKey } = streamKeyFromUrl(watchUrl);
     let stream = getStream('streamlink', streamKey);
     if (stream) {
         return { mpdPath: stream.mpdPath };
@@ -128,21 +146,12 @@ export async function getStreamlinkStream(watchUrl: string): Promise<{ mpdPath: 
     }
 }
 
-export function waitUntilExists(path: string, timeLimit: number) {
-    return new Promise<void>((resolve, reject) => {
-        const timeout = setTimeout(() => {
-            reject(new Error(`waitUntilExists for ${path} timed out`));
-        }, timeLimit);
-
-        const timerId = setInterval(() => {
-            const isExists = existsSync(path);
-            if (isExists) {
-                clearInterval(timerId);
-                clearTimeout(timeout);
-                resolve();
-            }
-        }, 250);
-    });
+export async function streamlinkHeartbeat(watchUrl: string) {
+    const { watchUrlUrl, sanitizedPathname, streamKey } = streamKeyFromUrl(watchUrl);
+    const stream = getStream('streamlink', streamKey) as StreamlinkStream | undefined;
+    if (stream) {
+        stream.lastHeartbeat = Date.now();
+    }
 }
 
 function newPromise<T>() {

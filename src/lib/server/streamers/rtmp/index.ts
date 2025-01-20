@@ -1,11 +1,11 @@
 import { createWriteStream, existsSync, ReadStream, type WriteStream } from 'node:fs';
 import { join, basename } from 'node:path';
-import { startFfmpeg } from './ffmpeg';
+import { startFfmpeg } from '@/lib/server/ffmpeg';
 import type { ChildProcess } from 'node:child_process';
 import { mkdir, rm } from 'node:fs/promises';
 import spawn from 'cross-spawn';
-import { addStream, getStream, WatchStream } from './streams';
-import { appendLogKey } from './utils';
+import { addStream, getStream, WatchStream } from '@/lib/server/streams';
+import { appendLogKey } from '@/lib/server/utils';
 import { pipeline } from 'node:stream/promises';
 
 export class RtmpStream extends WatchStream {

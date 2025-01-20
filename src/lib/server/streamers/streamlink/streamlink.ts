@@ -1,5 +1,5 @@
 import spawn from 'cross-spawn';
-import { ffmepg } from './ffmpeg';
+import { ffmepg } from '@/lib/server/ffmpeg';
 
 export interface StreamlinkJsonError {
     error: string;
@@ -25,7 +25,7 @@ export interface Stream {
     master: string;
 };
 
-const streamlink = String.raw`C:\Python311\Scripts\streamlink.exe`;
+const streamlink = process.env.STREAMLINK_PATH ?? "streamlink";
 
 export async function startStreamlink(options: {
     url: string,

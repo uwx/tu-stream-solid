@@ -1,7 +1,7 @@
 import { initTRPC } from '@trpc/server';
 import { z } from 'zod';
-import { getStreamlinkStream } from './stream-streamlink';
-import { getRtmpStream } from './stream-rtmp';
+import { getStreamlinkStream, streamlinkHeartbeat } from './streamers/streamlink';
+import { getRtmpStream } from './streamers/rtmp';
 
 const t = initTRPC.create();
 
@@ -18,6 +18,17 @@ export const appRouter = router({
         )
         .query(async ({ input }) => {
             return await getStreamlinkStream(`https://${input.host}/${input.path}`); 
+        }),
+    
+    streamlinkIsAlive: publicProcedure
+        .input(
+            z.object({
+                host: z.string(),
+                path: z.string(),
+            })
+        )
+        .query(async ({ input }) => {
+            await streamlinkHeartbeat(`https://${input.host}/${input.path}`);
         }),
 
     streamRtmp: publicProcedure
