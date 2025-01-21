@@ -19,9 +19,11 @@ export default defineConfig({
                     index: './src/index.tsx',
                 },
                 include: [
+                    /solidjs/,
                     /solid-js/,
                     /@trpc\+client/,
                     /@trpc\+server/,
+                    /@trpc/,
                 ],
             },
             output: {
