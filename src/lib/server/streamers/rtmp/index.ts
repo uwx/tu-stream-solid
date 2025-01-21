@@ -39,7 +39,7 @@ export class RtmpStream extends WatchStream {
     }
 }
 
-const tailscale = String.raw`G:\Programs\Tailscale\tailscale.exe`;
+const tailscale = process.env.TAILSCALE_PATH ?? 'tailscale';
 
 const usedPorts = new Set<number>();
 
