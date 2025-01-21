@@ -64,7 +64,7 @@ export default function HomeComponent() {
                 <div>
                     Stream to this URL:
                     <pre>
-                        {rtmpUrl()!.replace('127.0.0.1', document.location.hostname)}
+                        {rtmpUrl()!.replace('localhost', document.location.hostname)}
                     </pre>
                     Use this link to watch the stream:
                     <p>
