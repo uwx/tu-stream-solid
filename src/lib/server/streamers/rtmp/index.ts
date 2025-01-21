@@ -17,10 +17,9 @@ export class RtmpStream extends WatchStream {
         mpdFileName: string,
         dir: string,
         public readonly port: number,
-        public readonly tailscaleProcess: ChildProcess,
         public readonly rtmpUrl: string,
     ) {
-        super('rtmp', streamKey, [childProcess, tailscaleProcess], mpdFileName, dir);
+        super('rtmp', streamKey, [childProcess], mpdFileName, dir);
 
         this.logFile = createWriteStream(`rtmp-${streamKey}.log`, {flags: 'a'});
 
@@ -57,20 +56,16 @@ export async function startRtmpStream(username: string) {
     // todo make this secure
     const key = Math.round(Math.random() * Number.MAX_SAFE_INTEGER).toString(36);
 
-    if (usedPorts.size >= 32767) {
-        throw new Error('Too many used ports');
+    if (usedPorts.size >= 1024) { 
+        throw new Error('Too many active clients, sorry :(');
     }
 
     let port: number;
     do {
-        port = Math.round(Math.random() * 32767) + 32767;
+        port = Math.round(Math.random() * 1023) + 31743;
     } while (usedPorts.has(port));
 
-    const url = `rtmp://127.0.0.1:${port}/live/app/${key}`;
-
-    const tailscaleProcess = spawn(tailscale, ['funnel', '--tcp', String(port), String(port)], {
-        stdio: ['pipe', 'pipe', 'pipe'],
-    });
+    const url = `rtmp://${process.env.LISTEN_ADDRESS ?? 'localhost'}:${port}/live/app/${key}`;
 
     const ffmpegProcess = await startFfmpeg({
         inputs: [{
@@ -90,8 +85,7 @@ export async function startRtmpStream(username: string) {
         basename(mpdPath),
         dir,
         port,
-        tailscaleProcess,
-        url
+        `rtmp://${process.env.PUBLIC_ENDPOINT ?? 'localhost'}:${port}/live/app/${key}`
     );
 }
 
